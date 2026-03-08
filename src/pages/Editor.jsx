@@ -97,6 +97,26 @@ export default function Editor({ navigate, tourId }) {
     setTour((prev) => ({ ...prev, scene_url: url }))
   }
 
+  const onHotspotClick = (hotspotId) => {
+    setActiveHotspotId(hotspotId)
+    if (presentation) return
+    const current = hotspots.find((item) => item.id === hotspotId)
+    if (current) setEditingHotspot(current)
+  }
+
+  const onHotspotMove = (hotspotId, coords) => {
+    setActiveHotspotId(hotspotId)
+    setHotspots((prev) => prev.map((item) => (item.id === hotspotId ? { ...item, ...coords } : item)))
+  }
+
+  const onHotspotMoveEnd = async (hotspotId, coords) => {
+    const current = hotspots.find((item) => item.id === hotspotId)
+    if (!current) return
+    const payload = { ...current, ...coords }
+    const saved = await upsertHotspot(payload)
+    setHotspots((prev) => prev.map((item) => (item.id === hotspotId ? saved : item)))
+  }
+
   const Viewer = tour?.scene_type === 'panorama' ? PanoramaViewer : ImageViewer
 
   if (!tour) return <main className="page shell">Loading editor…</main>
@@ -136,7 +156,10 @@ export default function Editor({ navigate, tourId }) {
               hotspots={hotspots}
               activeHotspotId={activeHotspotId}
               onSceneClick={onSceneClick}
-              onHotspotClick={setActiveHotspotId}
+              onHotspotClick={onHotspotClick}
+              onHotspotMove={onHotspotMove}
+              onHotspotMoveEnd={onHotspotMoveEnd}
+              editable={!presentation}
               presentation={presentation}
             />
           ) : <div className="empty-scene">Upload a scene image to start.</div>}

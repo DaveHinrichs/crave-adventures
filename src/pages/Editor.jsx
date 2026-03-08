@@ -25,15 +25,23 @@ export default function Editor({ navigate, tourId }) {
     })
   }, [tourId])
 
-  const autosaveStatus = useAutosave(tour, async (value) => {
+  const editableTourFields = useMemo(() => {
+    if (!tour) return null
+
+    return {
+      title: tour.title || '',
+      slug: tour.slug || '',
+      scene_type: tour.scene_type || 'image',
+      scene_url: tour.scene_url || '',
+    }
+  }, [tour])
+
+  const saveTour = useCallback(async (value) => {
     if (!value) return
-    await updateTour(tourId, {
-      title: value.title,
-      slug: value.slug,
-      scene_type: value.scene_type,
-      scene_url: value.scene_url,
-    })
-  })
+    await updateTour(tourId, value)
+  }, [tourId])
+
+  const autosaveStatus = useAutosave(editableTourFields, saveTour, 1000)
 
   const onSceneClick = useCallback((coords) => {
     if (!placementMode) return

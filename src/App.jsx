@@ -1,33 +1,45 @@
-import { useState } from 'react'
-import { supabase } from './services/supabaseClient'
+import { useEffect, useMemo, useState } from 'react'
+import Landing from './pages/Landing'
+import Editor from './pages/Editor'
+import TourViewer from './pages/TourViewer'
 
-function App() {
-  const [message, setMessage] = useState('')
+function matchRoute(pathname) {
+  if (pathname === '/') return { page: 'landing' }
 
-  async function createTestTour() {
-    const { error } = await supabase
-      .from('tours')
-      .insert([
-        {
-          title: 'My First Tour',
-          slug: 'my-first-tour'
-        }
-      ])
+  const editorMatch = pathname.match(/^\/editor\/([^/]+)$/)
+  if (editorMatch) return { page: 'editor', tourId: editorMatch[1] }
 
-    if (error) {
-      setMessage('Error: ' + error.message)
-    } else {
-      setMessage('Tour created successfully')
-    }
-  }
+  const tourMatch = pathname.match(/^\/tour\/([^/]+)$/)
+  if (tourMatch) return { page: 'tour', slug: tourMatch[1] }
 
-  return (
-    <div style={{ padding: 40 }}>
-      <h1>Crave Adventures</h1>
-      <button onClick={createTestTour}>Create Test Tour</button>
-      <p>{message}</p>
-    </div>
-  )
+  return { page: 'not-found' }
 }
 
-export default App
+export default function App() {
+  const [pathname, setPathname] = useState(window.location.pathname)
+
+  useEffect(() => {
+    const onPopState = () => setPathname(window.location.pathname)
+    window.addEventListener('popstate', onPopState)
+    return () => window.removeEventListener('popstate', onPopState)
+  }, [])
+
+  const route = useMemo(() => matchRoute(pathname), [pathname])
+
+  const navigate = (to) => {
+    if (to === window.location.pathname) return
+    window.history.pushState({}, '', to)
+    setPathname(to)
+  }
+
+  if (route.page === 'landing') return <Landing navigate={navigate} />
+  if (route.page === 'editor') return <Editor navigate={navigate} tourId={route.tourId} />
+  if (route.page === 'tour') return <TourViewer navigate={navigate} slug={route.slug} />
+
+  return (
+    <main className="page shell">
+      <h1>Not Found</h1>
+      <button onClick={() => navigate('/')}>Back to Home</button>
+    </main>
+  )
+}

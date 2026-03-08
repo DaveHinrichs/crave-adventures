@@ -2,7 +2,8 @@ import { supabase } from './supabaseClient'
 
 const HOTSPOT_COLUMNS = `
   id,tour_id,title,text,image_url,video_url,audio_url,link_url,link_label,
-  x,y,yaw,pitch,marker_shape,marker_color,marker_border,marker_label,marker_pulse,order_index,
+  x,y,yaw,pitch,marker_shape,marker_color,marker_border,marker_label,marker_pulse,
+  width,height,opacity,hotspot_text,text_position,order_index,
   created_at,updated_at
 `
 
@@ -25,6 +26,10 @@ export async function upsertHotspot(hotspot) {
     marker_color: hotspot.marker_color || '#ff5f1f',
     marker_border: hotspot.marker_border ?? false,
     marker_pulse: hotspot.marker_pulse ?? false,
+    width: hotspot.width ?? 18,
+    height: hotspot.height ?? 18,
+    opacity: hotspot.opacity ?? 1,
+    text_position: hotspot.text_position || 'below',
     order_index: hotspot.order_index ?? 0,
   }
 

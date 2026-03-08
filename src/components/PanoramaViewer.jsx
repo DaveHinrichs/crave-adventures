@@ -20,7 +20,17 @@ function loadPannellumAssets() {
   }
 }
 
-export default function PanoramaViewer({ sceneUrl, hotspots, onSceneClick, onHotspotClick, activeHotspotId, presentation }) {
+export default function PanoramaViewer({
+  sceneUrl,
+  hotspots,
+  onSceneClick,
+  onHotspotClick,
+  onHotspotMove,
+  onHotspotMoveEnd,
+  activeHotspotId,
+  presentation,
+  editable = false,
+}) {
   const containerRef = useRef(null)
   const pannellumRef = useRef(null)
 
@@ -55,10 +65,13 @@ export default function PanoramaViewer({ sceneUrl, hotspots, onSceneClick, onHot
         hotspot={hotspot}
         isActive={activeHotspotId === hotspot.id}
         presentation={presentation}
-        onClick={() => onHotspotClick(hotspot.id)}
+        editable={editable}
+        onClick={() => onHotspotClick?.(hotspot.id)}
+        onMove={(coords) => onHotspotMove?.(hotspot.id, coords)}
+        onMoveEnd={(coords) => onHotspotMoveEnd?.(hotspot.id, coords)}
       />
     )),
-    [activeHotspotId, hotspots, onHotspotClick, presentation],
+    [activeHotspotId, editable, hotspots, onHotspotClick, onHotspotMove, onHotspotMoveEnd, presentation],
   )
 
   const handleClick = (event) => {

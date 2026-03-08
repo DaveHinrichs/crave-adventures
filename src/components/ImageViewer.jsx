@@ -1,6 +1,16 @@
 import HotspotMarker from './HotspotMarker'
 
-export default function ImageViewer({ sceneUrl, hotspots, onSceneClick, onHotspotClick, activeHotspotId, presentation }) {
+export default function ImageViewer({
+  sceneUrl,
+  hotspots,
+  onSceneClick,
+  onHotspotClick,
+  onHotspotMove,
+  onHotspotMoveEnd,
+  activeHotspotId,
+  presentation,
+  editable = false,
+}) {
   const handleClick = (event) => {
     const rect = event.currentTarget.getBoundingClientRect()
     const x = ((event.clientX - rect.left) / rect.width) * 100
@@ -18,7 +28,10 @@ export default function ImageViewer({ sceneUrl, hotspots, onSceneClick, onHotspo
             hotspot={hotspot}
             isActive={activeHotspotId === hotspot.id}
             presentation={presentation}
-            onClick={() => onHotspotClick(hotspot.id)}
+            editable={editable}
+            onClick={() => onHotspotClick?.(hotspot.id)}
+            onMove={(coords) => onHotspotMove?.(hotspot.id, coords)}
+            onMoveEnd={(coords) => onHotspotMoveEnd?.(hotspot.id, coords)}
           />
         ))}
       </div>

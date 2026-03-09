@@ -81,7 +81,6 @@ textarea { min-height: 72px; }
 .shape-rectangle .marker-shape { border-radius: 0; }
 .shape-rounded-square .marker-shape { border-radius: 6px; }
 .shape-diamond .marker-shape { transform: rotate(45deg); }
-.with-border .marker-shape { border: 2px solid #fff; }
 .pulse .marker-shape { animation: pulse 1.6s infinite; }
 .active .marker-shape { outline: 2px solid #000; }
 .marker-text { position: absolute; left: 50%; transform: translateX(-50%); font-size: 11px; background: #0008; color: #fff; padding: 1px 4px; border-radius: 3px; white-space: nowrap; }
@@ -112,10 +111,53 @@ textarea { min-height: 72px; }
 .hotspot-editor {
   background: #fff;
   border-radius: 12px;
-  width: min(560px, 90vw);
-  max-height: 90vh;
+  width: min(640px, 92vw);
+  max-height: 84vh;
   overflow: auto;
-  padding: 1rem;
+  padding: 1.1rem;
+  display: grid;
+  gap: 0.9rem;
+}
+.hotspot-editor h3 {
+  margin: 0;
+  padding-bottom: 0.65rem;
+  border-bottom: 1px solid #dce6f2;
+}
+.editor-section {
+  border: 1px solid #dde6f1;
+  border-radius: 10px;
+  padding: 0.8rem;
+  display: grid;
+  gap: 0.7rem;
+  background: #fbfdff;
+}
+.editor-section h4 {
+  margin: 0;
+  font-size: 0.92rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: #4f637b;
+}
+.checkbox-row {
+  flex-direction: row;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 38px;
+  padding: 0 0.35rem;
+  border: 1px solid #dce6f2;
+  border-radius: 8px;
+  background: #fff;
+}
+.checkbox-row input {
+  margin: 0;
+  width: 16px;
+  height: 16px;
+  padding: 0;
+}
+.toggle-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.6rem;
 }
 .modal-backdrop {
   position: fixed;
@@ -126,6 +168,7 @@ textarea { min-height: 72px; }
 }
 .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; }
 .actions, .row { display: flex; }
+.actions { gap: 0.6rem; justify-content: flex-end; padding-top: 0.2rem; }
 .gap-8 { gap: 0.5rem; }
 .empty-scene { display: grid; place-items: center; min-height: 280px; background: #fff; border-radius: 12px; }
 .autosave.saved { color: #1f8d44; }
@@ -144,6 +187,7 @@ textarea { min-height: 72px; }
 
 @media (max-width: 920px) {
   .editor-layout { grid-template-columns: 1fr; }
+  .toggle-grid, .grid-2 { grid-template-columns: 1fr; }
 }
 
 

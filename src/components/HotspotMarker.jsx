@@ -16,6 +16,9 @@ export default function HotspotMarker({
   const width = hotspot.width ?? defaultSize
   const height = hotspot.height ?? defaultSize
   const textPosition = hotspot.text_position || 'below'
+  const borderWidth = hotspot.marker_border_width ?? 2
+  const borderColor = hotspot.marker_border_color || '#ffffff'
+
   const style = {
     left: `${hotspot.x}%`,
     top: `${hotspot.y}%`,
@@ -82,7 +85,13 @@ export default function HotspotMarker({
 
   return (
     <button className={classNames} style={style} onClick={handleClick} onPointerDown={handlePointerDown} title={hotspot.title || 'Hotspot'} type="button">
-      <span className="marker-shape" style={{ background: hotspot.marker_color || '#ff5f1f' }} />
+      <span
+        className="marker-shape"
+        style={{
+          background: hotspot.marker_color || '#ff5f1f',
+          border: hotspot.marker_border ? `${borderWidth}px solid ${borderColor}` : 'none',
+        }}
+      />
       {hotspot.hotspot_text ? <span className={`marker-text marker-text-${textPosition}`}>{hotspot.hotspot_text}</span> : null}
     </button>
   )
